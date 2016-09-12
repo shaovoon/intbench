@@ -207,6 +207,20 @@ int main(int argc, char *argv [])
 	}
 	stopwatch.stop_timing();
 
+	stopwatch.start_timing("std::stoull");
+	namespace qi = boost::spirit::qi;
+	for (size_t k = 0; k < MAX_LOOP; ++k)
+	{
+		for (size_t i = 0; i<vec.size(); ++i)
+		{
+			pair_type& pr = vec[i];
+			n = std::stoull(pr.first, nullptr);
+			do_not_optimize_away(&n);
+			MYASSERT(n, pr.second);
+		}
+	}
+	stopwatch.stop_timing();
+
 	stopwatch.start_timing("my_atol_neg");
 	for (size_t k = 0; k < MAX_LOOP; ++k)
 	{
