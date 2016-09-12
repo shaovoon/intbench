@@ -261,20 +261,6 @@ int main(int argc, char *argv [])
 	}
 	stopwatch.stop_timing();
 
-	stopwatch.start_timing("boost_spirit_chr");
-	namespace qi = boost::spirit::qi;
-	for (size_t k = 0; k < MAX_LOOP; ++k)
-	{
-		for (size_t i = 0; i<vec.size(); ++i)
-		{
-			pair_type& pr = vec[i];
-			bool success = qi::parse(pr.first.c_str(), pr.first.c_str() + pr.first.size(), qi::long_long, n);
-			do_not_optimize_away(&n);
-			MYASSERT(n, pr.second);
-		}
-	}
-	stopwatch.stop_timing();
-
 	std::cout << "\nLast int value: " << n << " <-- ignore this value" << std::endl;
 	return 0;
 }
