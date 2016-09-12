@@ -1,7 +1,6 @@
-# intbench
-String to Integer Benchmark
+# C++ String to Integer Benchmark
 
-Note: The SSE4.2 code needs to be compile in x64 mode.
+**Note:** The SSE4.2 code needs to be compile in x64 mode.
 
 ```
                atol:  329ms
