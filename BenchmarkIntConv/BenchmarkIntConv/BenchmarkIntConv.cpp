@@ -254,7 +254,7 @@ int main(int argc, char *argv [])
 		for (size_t i = 0; i<vec.size(); ++i)
 		{
 			pair_type& pr = vec[i];
-			bool success = qi::parse(pr.first.begin(), pr.first.end(), qi::long_long, n);
+			bool success = qi::parse(pr.first.cbegin(), pr.first.cend(), qi::long_long, n);
 			do_not_optimize_away(&n);
 			MYASSERT(n, pr.second);
 		}
