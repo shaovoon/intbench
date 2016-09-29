@@ -7,7 +7,7 @@ Looping 10 million times
 ```
                atol:  329ms
        lexical_cast:  792ms
- std::istringstream: 6626ms
+ std::istringstream: 6626ms <== Probably unfair comparison since istringstream instaniate a string
         std::stoull:  730ms
         my_atol_neg:   80ms
          sse4i_atol:  103ms
