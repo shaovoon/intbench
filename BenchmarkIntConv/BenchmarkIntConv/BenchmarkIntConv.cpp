@@ -18,8 +18,9 @@
 #include <nmmintrin.h>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/lexical_cast.hpp>
+#include <cstdint>
 
-typedef std::pair<const std::string, const unsigned int> pair_type;
+typedef std::pair<const std::string, const std::int64_t> pair_type;
 typedef std::vector< pair_type > vector_type;
 
 #ifdef WIN32
@@ -102,46 +103,14 @@ __m128i __m128i_shift_right(__m128i value, int offset);
 __m128i __m128i_strloadu_page_boundary(const  char *s);
 __m128i ShfLAlnLSByte(__m128i value, int offset);
 
-__int64 sse4i_atol(const  char* s1);
+std::int64_t sse4i_atol(const  char* s1);
 
 #define RINT64VALNEG -1
 #define RINT64VALPOS 1
 
-unsigned int my_atoi(const char* start)
+std::int64_t simple_atol(const char* start)
 {
-	unsigned int ret = 0;
-	size_t my_size = strlen(start);
-
-	while (*start >= '0' && *start <= '9' && my_size) {
-		ret = ret * 10 + *start - '0';
-		start++;
-		my_size--;
-	}
-	return ret;
-}
-
-unsigned int my_atoi_neg(const char* start)
-{
-	unsigned int ret = 0;
-	size_t my_size = strlen(start);
-
-	bool neg = (*start == '-');
-	if(*start == '-' || (*start == '+')) {
-		start++;
-		my_size--;
-	}
-
-	while (*start >= '0' && *start <= '9' && my_size) {
-		ret = ret * 10 + *start - '0';
-		start++;
-		my_size--;
-	}
-	return (!neg) ? ret : -ret;
-}
-
-__int64 my_atol_neg(const char* start)
-{
-	__int64 ret = 0;
+	std::int64_t ret = 0;
 	size_t my_size = strlen(start);
 
 	bool neg = (*start == '-');
@@ -165,7 +134,7 @@ int main(int argc, char *argv [])
 	vector_type vec;
 	init(vec);
 	timer stopwatch;
-	size_t n = 0;
+	std::int64_t n = 0;
 
 	stopwatch.start_timing("atol");
 	for (size_t k = 0; k<MAX_LOOP; ++k)
@@ -186,7 +155,7 @@ int main(int argc, char *argv [])
 		for(size_t i=0; i<vec.size(); ++i)
 		{
 			pair_type& pr = vec[i];
-			n = boost::lexical_cast<unsigned int>(pr.first.c_str());
+			n = boost::lexical_cast<std::int64_t>(pr.first.c_str());
 			do_not_optimize_away(&n);
 			MYASSERT(n, pr.second);
 		}
@@ -207,27 +176,26 @@ int main(int argc, char *argv [])
 	}
 	stopwatch.stop_timing();
 
-	stopwatch.start_timing("std::stoull");
-	namespace qi = boost::spirit::qi;
+	stopwatch.start_timing("std::stoll");
 	for (size_t k = 0; k < MAX_LOOP; ++k)
 	{
 		for (size_t i = 0; i<vec.size(); ++i)
 		{
 			pair_type& pr = vec[i];
-			n = std::stoull(pr.first, nullptr);
+			n = std::stoll(pr.first, nullptr);
 			do_not_optimize_away(&n);
 			MYASSERT(n, pr.second);
 		}
 	}
 	stopwatch.stop_timing();
 
-	stopwatch.start_timing("my_atol_neg");
+	stopwatch.start_timing("simple_atol");
 	for (size_t k = 0; k < MAX_LOOP; ++k)
 	{
 		for(size_t i=0; i<vec.size(); ++i)
 		{
 			pair_type& pr = vec[i];
-			n = my_atol_neg(pr.first.c_str());
+			n = simple_atol(pr.first.c_str());
 			do_not_optimize_away(&n);
 			MYASSERT(n, pr.second);
 		}
@@ -268,36 +236,36 @@ int main(int argc, char *argv [])
 void init(vector_type& vec)
 {
 	std::string int_str = "12369";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "25934";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "4789636";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "532102";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "45655";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "83658";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "1256900";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "12362311";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "55222389";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 	int_str = "1423";
-	vec.push_back(std::make_pair(int_str, atoi(int_str.c_str())));
+	vec.push_back(std::make_pair(int_str, atol(int_str.c_str())));
 
 }
 
-__int64 sse4i_atol(const  char* s1)
+std::int64_t sse4i_atol(const  char* s1)
 {
 	char  *p = (char *) s1;
 	int NegSgn = 0;
 	__m128i mask0;
 	__m128i  value0, value1;
 	__m128i  w1, w1_l8, w1_u8, w2, w3 = _mm_setzero_si128();
-	__int64 xxi;
+	std::int64_t xxi;
 	int index, cflag, sflag, zflag, oob = 0;
 	// check the first character is valid via lookup
 	if ((BtMLValDecInt[*p >> 3] & (1
