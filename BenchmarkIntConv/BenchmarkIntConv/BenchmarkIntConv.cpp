@@ -64,7 +64,7 @@ public:
 
 private:
 	std::string text;
-	std::chrono::steady_clock::time_point begin;
+	std::chrono::high_resolution_clock::time_point begin;
 };
 
 // bit lookup table of valid ascii code for decimal string conversion, white space, sign, numeric digits
