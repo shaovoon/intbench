@@ -19,6 +19,7 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/lexical_cast.hpp>
 #include <cstdint>
+#include <charconv>
 
 typedef std::pair<const std::string, const std::int64_t> pair_type;
 typedef std::vector< pair_type > vector_type;
@@ -223,6 +224,19 @@ int main(int argc, char *argv [])
 		{
 			pair_type& pr = vec[i];
 			bool success = qi::parse(pr.first.cbegin(), pr.first.cend(), qi::long_long, n);
+			do_not_optimize_away(&n);
+			MYASSERT(n, pr.second);
+		}
+	}
+	stopwatch.stop_timing();
+
+	stopwatch.start_timing("std::from_chars");
+	for (size_t k = 0; k < MAX_LOOP; ++k)
+	{
+		for (size_t i = 0; i < vec.size(); ++i)
+		{
+			pair_type& pr = vec[i];
+			std::from_chars(pr.first.data(), pr.first.data()+pr.first.size(), n);
 			do_not_optimize_away(&n);
 			MYASSERT(n, pr.second);
 		}
