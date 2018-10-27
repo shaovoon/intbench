@@ -5,13 +5,12 @@
 Looping 10 million times
 
 ```
-               atol:  213ms
-       lexical_cast: 1267ms
- std::istringstream: 7269ms <== Probably unfair comparison since istringstream instaniate a string
-         std::stoll:  466ms
-        simple_atol:   94ms
-         sse4i_atol:   92ms
-       boost_spirit:   99ms
-    std::from_chars:   64ms
-
+               atol:  243ms
+       lexical_cast:  952ms
+ std::istringstream: 5338ms
+         std::stoll:  383ms
+        simple_atol:   74ms
+         sse4i_atol:   72ms
+       boost_spirit:   78ms
+    std::from_chars:   59ms
 ```
